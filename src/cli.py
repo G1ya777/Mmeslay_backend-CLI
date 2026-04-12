@@ -2,22 +2,28 @@ import argparse
 import os
 import warnings
 import subprocess
-from inference_file import inference
+
 
 warnings.filterwarnings("ignore")
 
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument("--gradio", action="store_true", help="Launch gradio UI")
     parser.add_argument("--server", action="store_true", help="Launch flask server")
     parser.add_argument("--test", action="store_true", help="Launch test")
     parser.add_argument("--infer", help="Path to audio file for infernace")
     parser.add_argument("--audio_location", help="Path to audio files")
     args = parser.parse_args()
+
+    if args.gradio:
+        subprocess.run(["python", "src/gradio_app.py"])
+
     if args.infer:
         if not os.path.exists(args.infer):
             print(f"File not found: {args.infer}")
             return
+        from inference_file import inference
 
         result = inference(args.infer)
         print(result)
